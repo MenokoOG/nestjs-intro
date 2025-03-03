@@ -11,40 +11,33 @@ import {
   Headers,
   Ip,
   ParseIntPipe,
+  DefaultValuePipe,
 } from '@nestjs/common';
+import { CreateUserDto } from './dto/create-user.dto';
+import { GetUsersParamDto } from './dto/get-users-param.dto';
+import { PatchUserDto } from './dto/patch-user.dto';
 
 @Controller('users')
 export class UsersController {
-  /**
-   * Final Endpoint - /users/id?limit=10&page=1
-   * Parama id - optional, convert to integer, cannot have a default value
-   * Query limit - integer, default 10
-   * Query page - integer, default value 1
-   * ==> USE CASES
-   * /users/ -> return all users with default pagination
-   * /users/1223 -> returns one user whos id is 1234
-   * /users?limit=10&page=2 -> return page 2 with limt of pagination 10
-   */
-
-  @Get('/:id/:optional?')
+  @Get('/:id?')
   public getUsers(
-    @Param('id', ParseIntPipe) id: number | undefined,
-    @Query('limit') limit: any,
+    @Param() getUserParamDto: GetUsersParamDto,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
   ) {
-    console.log(typeof id);
-    console.log(id);
+    console.log(getUserParamDto);
+
     return 'You sent a get request to users endpoint';
   }
 
   @Post()
-  public createUsers(
-    @Body() request: any,
-    @Headers() headers: any,
-    @Ip() ip: any,
-  ) {
-    console.log(request);
-    console.log(headers);
-    console.log(ip);
+  public createUsers(@Body() createUserDto: CreateUserDto) {
+    console.log(createUserDto);
     return 'You sent a post request to users endpoint';
+  }
+
+  @Patch()
+  public patchUser(@Body() patchUserDto: PatchUserDto) {
+    return patchUserDto;
   }
 }
