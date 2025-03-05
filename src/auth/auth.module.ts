@@ -4,9 +4,9 @@ import { AuthService } from './providers/auth.service';
 import { UsersModule } from 'src/users/users.module';
 
 @Module({
+  imports: [forwardRef(() => UsersModule)],
   controllers: [AuthController],
   providers: [AuthService],
-  imports: [forwardRef(() => UsersModule)],
   exports: [AuthService],
 })
 export class AuthModule {}
