@@ -18,7 +18,10 @@ import { CreatePostMetaOptionsDto } from './create-post-meta-options.dto';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreatePostDto {
-  @ApiProperty()
+  @ApiProperty({
+    description: 'The title of the post.',
+    example: 'My Awesome Post',
+  })
   @IsString()
   @MinLength(4)
   @IsNotEmpty()
@@ -51,7 +54,10 @@ export class CreatePostDto {
   @IsNotEmpty()
   status: postStatus;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({
+    description: 'The main content of the post.',
+    example: 'This is the detailed content of the post...',
+  })
   @IsOptional()
   @IsString()
   content?: string;
@@ -67,7 +73,7 @@ export class CreatePostDto {
   schema?: string;
 
   @ApiPropertyOptional({
-    description: 'Provide a valid URL for the featured image. For',
+    description: 'Provide a valid URL for the featured image.',
     example: 'http://localhost.com/images/image1.jpg',
   })
   @IsOptional()
