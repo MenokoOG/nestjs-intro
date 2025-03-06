@@ -1,14 +1,119 @@
+import {
+  IsArray,
+  IsEnum,
+  IsISO8601,
+  IsJSON,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  IsUrl,
+  Matches,
+  MinLength,
+  ValidateNested,
+} from 'class-validator';
 import { postStatus } from '../enums/post-status.enum';
+import { PostType } from '../enums/post-type.enum';
+import { Type } from 'class-transformer';
+import { CreatePostMetaOptionsDto } from './create-post-meta-options.dto';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreatePostDto {
+  @ApiProperty()
+  @IsString()
+  @MinLength(4)
+  @IsNotEmpty()
   title: string;
+
+  @ApiProperty({
+    enum: PostType,
+    description: "Possible values  'post', 'page', 'story', 'series'",
+  })
+  @IsEnum(PostType)
+  @IsNotEmpty()
   postType: string;
+
+  @ApiProperty({
+    description: "For example 'my-url'",
+  })
+  @IsString()
+  @IsNotEmpty()
+  @Matches(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, {
+    message:
+      'A slug should be all small letters and uses only "-" and without spaces. For example "my-url"',
+  })
   slug: string;
+
+  @ApiProperty({
+    enum: postStatus,
+    description: "Possible values 'draft', 'scheduled', 'review', 'published'",
+  })
+  @IsEnum(postStatus)
+  @IsNotEmpty()
   status: postStatus;
-  content: string;
-  schema: string;
-  featuredImageUrl: string;
-  publishOn: Date;
-  tags: ['typescript', 'nestjs'];
-  metaOptions: [{ key: 'sidebarEnabled'; value: false }];
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  content?: string;
+
+  @ApiPropertyOptional({
+    description:
+      'Serialize your JSON object else a validation error will be thrown',
+    example:
+      '{\r\n    "@context": "https:\/\/schema.org",\r\n    "@type": "Person"\r\n  }',
+  })
+  @IsOptional()
+  @IsJSON()
+  schema?: string;
+
+  @ApiPropertyOptional({
+    description: 'Provide a valid URL for the featured image. For',
+    example: 'http://localhost.com/images/image1.jpg',
+  })
+  @IsOptional()
+  @IsUrl()
+  featuredImageUrl?: string;
+
+  @ApiProperty({
+    description: 'Must be a valid timestamp in ISO8601',
+    example: '2024-03-16T07:46:32+0000',
+  })
+  @IsISO8601()
+  @IsOptional()
+  publishOn?: Date;
+
+  @ApiPropertyOptional({
+    description: 'Array of tags passed as string values',
+    example: ['nestjs', 'nestjs-tutorial'],
+  })
+  @IsArray()
+  @IsOptional()
+  @IsString({ each: true })
+  @MinLength(3, { each: true })
+  tags?: string[];
+
+  @ApiPropertyOptional({
+    type: 'array',
+    required: false,
+    items: {
+      type: 'object',
+      properties: {
+        key: {
+          type: 'string',
+          description: 'The key for the meta option and can be any string',
+          example: 'author',
+        },
+        value: {
+          type: 'any',
+          description: 'The value for the meta option and can be any value',
+          example: 'John Doe',
+        },
+      },
+    },
+  })
+  @IsArray()
+  @IsOptional()
+  @ValidateNested({ each: true })
+  @Type(() => CreatePostMetaOptionsDto)
+  metaOptions?: CreatePostMetaOptionsDto[];
 }
