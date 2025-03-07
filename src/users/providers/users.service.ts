@@ -2,20 +2,37 @@ import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { GetUsersParamDto } from '../dto/get-users-param.dto';
 import { AuthService } from 'src/auth/providers/auth.service';
 
+/**
+ * UsersService
+ *
+ * Class to connect to Users table and perform business operations.
+ */
 @Injectable()
 export class UsersService {
+  /**
+   * Creates an instance of UsersService.
+   *
+   * @param authService - Injected AuthService instance.
+   */
   constructor(
-    // Injecting Auth Service
     @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService,
   ) {}
 
-  /*
-   * Method to find all the users
+  /**
+   * Find all users.
+   *
+   * This method retrieves a list of users. It accepts query parameters
+   * and pagination options.
+   *
+   * @param getUserParamDto - DTO containing parameters to filter users.
+   * @param limit - Maximum number of users to retrieve.
+   * @param page - The page number for pagination.
+   * @returns An array of user objects.
    */
   public findAll(
     getUserParamDto: GetUsersParamDto,
-    limt: number,
+    limit: number,
     page: number,
   ) {
     const isAuth = this.authService.isAuth();
@@ -33,8 +50,13 @@ export class UsersService {
     ];
   }
 
-  /*
-   * Find a user by ID
+  /**
+   * Find a user by ID.
+   *
+   * Retrieves a user by the given unique identifier.
+   *
+   * @param id - The unique identifier of the user.
+   * @returns The user object with the specified ID.
    */
   public findOneById(id: number) {
     return {

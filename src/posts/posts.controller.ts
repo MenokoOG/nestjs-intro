@@ -4,16 +4,34 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { PatchPostDto } from './dto/patch-post.dto';
 import { ApiOperation, ApiResponse, ApiTags, ApiParam } from '@nestjs/swagger';
 
+/**
+ * PostsController
+ *
+ * Controller to handle endpoints related to blog posts.
+ */
 @Controller('posts')
 @ApiTags('Posts')
 export class PostsController {
+  /**
+   * Creates an instance of PostsController.
+   *
+   * @param postsService - Injected PostsService to manage post-related operations.
+   */
   constructor(
-    /*
-     * Injecting Posts Service
+    /**
+     * Injecting Posts Service.
      */
     private readonly postsService: PostsService,
   ) {}
 
+  /**
+   * GET /posts/:userId
+   *
+   * Retrieve all posts for a specific user.
+   *
+   * @param userId - The ID of the user whose posts are to be retrieved.
+   * @returns An array of posts belonging to the specified user.
+   */
   @Get('/:userId')
   @ApiOperation({
     summary: 'Retrieve all posts for a specific user',
@@ -32,6 +50,13 @@ export class PostsController {
     return this.postsService.findAll(userId);
   }
 
+  /**
+   * POST /posts
+   *
+   * Creates a new blog post.
+   *
+   * @param createPostDto - Data Transfer Object containing the details of the post to be created.
+   */
   @ApiOperation({
     summary: 'Creates a new post for the blog',
   })
@@ -45,6 +70,13 @@ export class PostsController {
     console.log(createPostDto);
   }
 
+  /**
+   * PATCH /posts
+   *
+   * Updates an existing blog post in the database.
+   *
+   * @param patchPostsDto - Data Transfer Object containing the updated post details.
+   */
   @ApiOperation({
     summary: 'Updates an existing blog post in the database',
   })

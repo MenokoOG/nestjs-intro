@@ -17,7 +17,19 @@ import { Type } from 'class-transformer';
 import { CreatePostMetaOptionsDto } from './create-post-meta-options.dto';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
+/**
+ * CreatePostDto
+ *
+ * Data Transfer Object for creating a new post.
+ * This DTO contains properties such as title, post type, slug, status, and additional optional properties
+ * including content, schema, featured image URL, publication date, tags, and meta options.
+ */
 export class CreatePostDto {
+  /**
+   * The title of the post.
+   *
+   * @example "My Awesome Post"
+   */
   @ApiProperty({
     description: 'The title of the post.',
     example: 'My Awesome Post',
@@ -27,6 +39,11 @@ export class CreatePostDto {
   @IsNotEmpty()
   title: string;
 
+  /**
+   * The type of the post.
+   *
+   * Possible values: 'post', 'page', 'story', 'series'
+   */
   @ApiProperty({
     enum: PostType,
     description: "Possible values  'post', 'page', 'story', 'series'",
@@ -35,6 +52,12 @@ export class CreatePostDto {
   @IsNotEmpty()
   postType: string;
 
+  /**
+   * The slug for the post URL.
+   *
+   * Must be all lowercase letters, use dashes (-) as separators, and have no spaces.
+   * @example "my-url"
+   */
   @ApiProperty({
     description: "For example 'my-url'",
   })
@@ -46,6 +69,11 @@ export class CreatePostDto {
   })
   slug: string;
 
+  /**
+   * The status of the post.
+   *
+   * Possible values: 'draft', 'scheduled', 'review', 'published'
+   */
   @ApiProperty({
     enum: postStatus,
     description: "Possible values 'draft', 'scheduled', 'review', 'published'",
@@ -54,6 +82,11 @@ export class CreatePostDto {
   @IsNotEmpty()
   status: postStatus;
 
+  /**
+   * The main content of the post.
+   *
+   * @example "This is the detailed content of the post..."
+   */
   @ApiPropertyOptional({
     description: 'The main content of the post.',
     example: 'This is the detailed content of the post...',
@@ -62,16 +95,27 @@ export class CreatePostDto {
   @IsString()
   content?: string;
 
+  /**
+   * JSON schema for the post.
+   *
+   * Serialize your JSON object; otherwise, a validation error will be thrown.
+   * @example '{ "@context": "https://schema.org", "@type": "Person" }'
+   */
   @ApiPropertyOptional({
     description:
       'Serialize your JSON object else a validation error will be thrown',
     example:
-      '{\r\n    "@context": "https:\/\/schema.org",\r\n    "@type": "Person"\r\n  }',
+      '{\r\n    "@context": "https://schema.org",\r\n    "@type": "Person"\r\n  }',
   })
   @IsOptional()
   @IsJSON()
   schema?: string;
 
+  /**
+   * URL for the featured image.
+   *
+   * @example "http://localhost.com/images/image1.jpg"
+   */
   @ApiPropertyOptional({
     description: 'Provide a valid URL for the featured image.',
     example: 'http://localhost.com/images/image1.jpg',
@@ -80,6 +124,12 @@ export class CreatePostDto {
   @IsUrl()
   featuredImageUrl?: string;
 
+  /**
+   * The publication date of the post.
+   *
+   * Must be a valid timestamp in ISO8601 format.
+   * @example "2024-03-16T07:46:32+0000"
+   */
   @ApiProperty({
     description: 'Must be a valid timestamp in ISO8601',
     example: '2024-03-16T07:46:32+0000',
@@ -88,6 +138,12 @@ export class CreatePostDto {
   @IsOptional()
   publishOn?: Date;
 
+  /**
+   * An array of tags associated with the post.
+   *
+   * Each tag must be a string with a minimum length of 3 characters.
+   * @example ["nestjs", "nestjs-tutorial"]
+   */
   @ApiPropertyOptional({
     description: 'Array of tags passed as string values',
     example: ['nestjs', 'nestjs-tutorial'],
@@ -98,6 +154,12 @@ export class CreatePostDto {
   @MinLength(3, { each: true })
   tags?: string[];
 
+  /**
+   * An array of meta options for the post.
+   *
+   * Each meta option is an object containing a key and a value.
+   * @example [{ key: "author", value: "John Doe" }]
+   */
   @ApiPropertyOptional({
     type: 'array',
     required: false,

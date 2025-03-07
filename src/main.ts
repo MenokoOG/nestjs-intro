@@ -6,6 +6,15 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 
+/**
+ * Bootstraps the NestJS application.
+ *
+ * This function creates a NestJS application instance using the AppModule,
+ * sets up a global ValidationPipe to enforce validation rules, and installs
+ * Swagger for API documentation with a custom configuration.
+ *
+ * Swagger documentation will be available at the `/api` endpoint.
+ */
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(

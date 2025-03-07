@@ -20,12 +20,30 @@ import {
   ApiParam,
 } from '@nestjs/swagger';
 
+/**
+ * UsersController
+ *
+ * Controller to handle user-related endpoints.
+ */
 @Controller('users')
 @ApiTags('Users')
 export class UsersController {
+  /**
+   * Creates an instance of UsersController.
+   *
+   * @param usersService - The service handling business logic for users.
+   */
   constructor(private readonly usersService: UsersService) {}
 
-  // Endpoint to fetch all users with pagination
+  /**
+   * GET /users
+   *
+   * Endpoint to fetch all users with pagination.
+   *
+   * @param limit - The upper limit of pages for pagination (default: 10).
+   * @param page - The page number to return (default: 1).
+   * @returns A list of users.
+   */
   @Get()
   @ApiOperation({
     summary: 'Fetches a list of registered users on the application.',
@@ -54,7 +72,14 @@ export class UsersController {
     return this.usersService.findAll({}, limit, page);
   }
 
-  // Endpoint to fetch a single user by ID
+  /**
+   * GET /users/:id
+   *
+   * Endpoint to fetch a single user by ID.
+   *
+   * @param id - Unique identifier of the user.
+   * @returns The user object corresponding to the given ID.
+   */
   @Get(':id')
   @ApiOperation({ summary: 'Fetches a single user by ID.' })
   @ApiParam({ name: 'id', description: 'User ID', type: Number, example: 1234 })
@@ -63,7 +88,14 @@ export class UsersController {
     return this.usersService.findOneById(id);
   }
 
-  // Endpoint to create a new user
+  /**
+   * POST /users
+   *
+   * Endpoint to create a new user.
+   *
+   * @param createUserDto - Data transfer object containing new user details.
+   * @returns A confirmation message upon user creation.
+   */
   @Post()
   @ApiOperation({ summary: 'Creates a new user.' })
   @ApiResponse({ status: 201, description: 'User created successfully.' })
@@ -72,7 +104,14 @@ export class UsersController {
     return 'You sent a post request to users endpoint';
   }
 
-  // Endpoint to update an existing user
+  /**
+   * PATCH /users
+   *
+   * Endpoint to update an existing user.
+   *
+   * @param patchUserDto - Data transfer object containing user updates.
+   * @returns The updated user data.
+   */
   @Patch()
   @ApiOperation({ summary: 'Updates an existing user.' })
   @ApiResponse({ status: 200, description: 'User updated successfully.' })
